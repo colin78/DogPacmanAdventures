@@ -39,7 +39,7 @@ class Lucy extends GameObject {
         this.isEating = false;
         this.eatingFrames = [loadImage('lucy_eating1.svg'), loadImage('lucy_eating2.svg')];
         this.currentEatingFrame = 0;
-        this.eatingAnimationDuration = 500; // ms
+        this.eatingAnimationDuration = 500;
         this.eatingAnimationStart = 0;
     }
 
@@ -94,19 +94,19 @@ class Goose extends GameObject {
         super(x, y, CELL_SIZE * 1.5, 'white', loadImage('goose.svg'));
         this.direction = getRandomDirection();
         this.moveCounter = 0;
-        this.moveFrequency = 16; // Slowed down movement
+        this.moveFrequency = 16;
         this.directionChangeTimer = 0;
-        this.directionChangeInterval = Math.random() * 5000 + 5000; // Random interval between 5-10 seconds
+        this.directionChangeInterval = Math.random() * 5000 + 5000;
     }
 
     move() {
         this.moveCounter++;
-        this.directionChangeTimer += 16; // Assuming 60 FPS, each frame is about 16ms
+        this.directionChangeTimer += 16;
 
         if (this.directionChangeTimer >= this.directionChangeInterval) {
             this.direction = getRandomDirection();
             this.directionChangeTimer = 0;
-            this.directionChangeInterval = Math.random() * 10000 + 10000; // Set new random interval
+            this.directionChangeInterval = Math.random() * 10000 + 10000;
         }
 
         if (this.moveCounter >= this.moveFrequency) {
@@ -116,7 +116,6 @@ class Goose extends GameObject {
             let newY = this.y + this.direction.y;
 
             if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
-                // Change direction when hitting a wall
                 this.direction = getRandomDirection();
             } else {
                 this.x = newX;
@@ -128,16 +127,16 @@ class Goose extends GameObject {
 
 function loadImage(name) {
     const img = new Image();
-    img.src = `/static/assets/${name}?v=${Date.now()}`; // Add cache-busting query parameter
+    img.src = `/static/assets/${name}?v=${Date.now()}`;
     return img;
 }
 
 function getRandomDirection() {
     const directions = [
-        { x: 0, y: -1 }, // Up
-        { x: 0, y: 1 },  // Down
-        { x: -1, y: 0 }, // Left
-        { x: 1, y: 0 }   // Right
+        { x: 0, y: -1 },
+        { x: 0, y: 1 },
+        { x: -1, y: 0 },
+        { x: 1, y: 0 }
     ];
     return directions[Math.floor(Math.random() * directions.length)];
 }
@@ -149,25 +148,21 @@ function init() {
     geese = [];
     score = 0;
 
-    // Generate treats
     for (let i = 0; i < 100; i++) {
         treats.push(new Treat(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
     }
 
-    // Generate power-ups
     for (let i = 0; i < 5; i++) {
         const type = Math.random() < 0.5 ? 'pizza' : 'hamburger';
         powerUps.push(new PowerUp(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS), type));
     }
 
-    // Generate geese
     for (let i = 0; i < 5; i++) {
         geese.push(new Goose(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
     }
 }
 
 function update() {
-    // Check for treat collection
     treats = treats.filter(treat => {
         if (lucy.x === treat.x && lucy.y === treat.y) {
             score += 10;
@@ -178,7 +173,6 @@ function update() {
         return true;
     });
 
-    // Check for power-up collection
     powerUps = powerUps.filter(powerUp => {
         if (lucy.x === powerUp.x && lucy.y === powerUp.y) {
             score += 50;
@@ -189,7 +183,6 @@ function update() {
         return true;
     });
 
-    // Move geese
     geese.forEach(goose => {
         goose.move();
         if (lucy.x === goose.x && lucy.y === goose.y) {
@@ -197,7 +190,6 @@ function update() {
         }
     });
 
-    // Check win condition
     if (treats.length === 0 && powerUps.length === 0) {
         gameWin();
     }
@@ -211,10 +203,16 @@ function draw() {
     geese.forEach(goose => goose.draw());
     lucy.draw();
 
-    // Draw score
-    ctx.fillStyle = 'white';
-    ctx.font = '20px Arial';
-    ctx.fillText(`Score: ${score}`, 10, 30);
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.strokeText(`Score: ${score}`, 10, 10);
+    
+    ctx.fillStyle = 'black';
+    ctx.fillText(`Score: ${score}`, 10, 10);
 }
 
 function gameLoop() {
@@ -268,5 +266,4 @@ document.getElementById('restart-button').addEventListener('click', () => {
     init();
 });
 
-// Initial setup
 document.getElementById('game-over-screen').style.display = 'none';
