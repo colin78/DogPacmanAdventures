@@ -61,6 +61,13 @@ class Lucy extends GameObject {
         if (this.y >= ROWS) this.y = 0;
     }
 
+    moveRandomly() {
+        if (this.hasZoomies) {
+            const randomDirection = getRandomDirection();
+            this.move(randomDirection);
+        }
+    }
+
     startEating() {
         this.isEating = true;
         this.eatingAnimationStart = Date.now();
@@ -74,7 +81,9 @@ class Lucy extends GameObject {
     startZoomies() {
         this.hasZoomies = true;
         this.zoomiesTimer = Date.now();
-        this.startInvincibility(); // Zoomies also make Lucy invincible
+        this.startInvincibility();
+        // Display "Bathtub zoomies activated!" message
+        showMessage("Bathtub zoomies activated!", 3000);
     }
 
     updatePowerUps() {
@@ -219,6 +228,7 @@ function init() {
 
 function update() {
     lucy.updatePowerUps();
+    lucy.moveRandomly(); // Add this line
 
     treats = treats.filter(treat => {
         if (lucy.x === treat.x && lucy.y === treat.y) {
@@ -311,6 +321,26 @@ function gameWin() {
 function playSound(soundFile) {
     const audio = new Audio(`/static/assets/${soundFile}`);
     audio.play();
+}
+
+function showMessage(text, duration) {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = text;
+    messageElement.style.position = 'absolute';
+    messageElement.style.top = '50%';
+    messageElement.style.left = '50%';
+    messageElement.style.transform = 'translate(-50%, -50%)';
+    messageElement.style.fontSize = '24px';
+    messageElement.style.fontWeight = 'bold';
+    messageElement.style.color = 'blue';
+    messageElement.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+    messageElement.style.padding = '10px';
+    messageElement.style.borderRadius = '5px';
+    document.body.appendChild(messageElement);
+
+    setTimeout(() => {
+        document.body.removeChild(messageElement);
+    }, duration);
 }
 
 document.addEventListener('keydown', (e) => {
