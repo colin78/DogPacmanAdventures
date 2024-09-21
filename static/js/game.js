@@ -124,14 +124,18 @@ class Treat extends GameObject {
 
 class PowerUp extends GameObject {
     constructor(x, y, type) {
-        super(x, y, CELL_SIZE, 'green', loadImage(type === 'pizza' ? 'pizza.svg' : type === 'hamburger' ? 'hamburger.svg' : 'bathtub.svg'));
+        const image = loadImage(type === 'pizza' ? 'pizza.svg' : type === 'hamburger' ? 'hamburger.svg' : 'bathtub.svg');
+        super(x, y, CELL_SIZE, 'green', image);
         this.type = type;
-        console.log(`Created PowerUp: ${type} at (${x}, ${y})`); // Debug log
+        console.log(`Created ${type} power-up at (${x}, ${y})`);
+        if (!this.image) {
+            console.error(`Failed to load image for ${type} power-up`);
+        }
     }
 
     draw() {
         super.draw();
-        console.log(`Drawing PowerUp: ${this.type} at (${this.x}, ${this.y})`); // Debug log
+        console.log(`Drawing ${this.type} power-up at (${this.x}, ${this.y})`);
     }
 }
 
@@ -199,7 +203,7 @@ function init() {
     }
 
     for (let i = 0; i < 5; i++) {
-        const type = Math.random() < 0.33 ? 'pizza' : Math.random() < 0.66 ? 'hamburger' : 'bathtub';
+        const type = Math.random() < 0.4 ? 'bathtub' : Math.random() < 0.7 ? 'pizza' : 'hamburger';
         powerUps.push(new PowerUp(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS), type));
     }
 
@@ -207,7 +211,7 @@ function init() {
         geese.push(new Goose(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
     }
 
-    console.log(`Initialized ${powerUps.length} power-ups:`); // Debug log
+    console.log(`Initialized ${powerUps.length} power-ups:`);
     powerUps.forEach((powerUp, index) => {
         console.log(`PowerUp ${index + 1}: ${powerUp.type} at (${powerUp.x}, ${powerUp.y})`);
     });
@@ -236,7 +240,7 @@ function update() {
             } else {
                 lucy.startInvincibility();
             }
-            console.log(`Collected PowerUp: ${powerUp.type}`); // Debug log
+            console.log(`Collected PowerUp: ${powerUp.type}`);
             return false;
         }
         return true;
@@ -284,8 +288,6 @@ function draw() {
         ctx.fillStyle = 'blue';
         ctx.fillText(`Zoomies: ${remainingTime}s`, 10, 70);
     }
-
-    // Debug drawing section removed as requested
 }
 
 function gameLoop() {
