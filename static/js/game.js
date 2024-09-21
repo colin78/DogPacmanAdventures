@@ -67,21 +67,28 @@ class Enemy extends GameObject {
     constructor(x, y) {
         super(x, y, CELL_SIZE, 'red', loadImage('person.svg'));
         this.direction = getRandomDirection();
+        this.moveCounter = 0;
+        this.moveFrequency = 3; // Move every 3 frames
     }
 
     move() {
-        if (Math.random() < 0.1) {
-            this.direction = getRandomDirection();
-        }
+        this.moveCounter++;
+        if (this.moveCounter >= this.moveFrequency) {
+            this.moveCounter = 0;
 
-        let newX = this.x + this.direction.x;
-        let newY = this.y + this.direction.y;
+            if (Math.random() < 0.05) { // Reduced probability of changing direction
+                this.direction = getRandomDirection();
+            }
 
-        if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
-            this.direction = getRandomDirection();
-        } else {
-            this.x = newX;
-            this.y = newY;
+            let newX = this.x + this.direction.x;
+            let newY = this.y + this.direction.y;
+
+            if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
+                this.direction = getRandomDirection();
+            } else {
+                this.x = newX;
+                this.y = newY;
+            }
         }
     }
 }
