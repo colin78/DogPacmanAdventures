@@ -41,6 +41,9 @@ class Lucy extends GameObject {
         this.currentEatingFrame = 0;
         this.eatingAnimationDuration = 500;
         this.eatingAnimationStart = 0;
+        this.isInvincible = false;
+        this.invincibilityTimer = 0;
+        this.invincibilityDuration = 30000; // 30 seconds
     }
 
     move(direction) {
@@ -58,9 +61,27 @@ class Lucy extends GameObject {
         this.eatingAnimationStart = Date.now();
     }
 
+    startInvincibility() {
+        this.isInvincible = true;
+        this.invincibilityTimer = Date.now();
+    }
+
+    updateInvincibility() {
+        if (this.isInvincible && Date.now() - this.invincibilityTimer >= this.invincibilityDuration) {
+            this.isInvincible = false;
+        }
+    }
+
     draw() {
         const drawX = this.x * CELL_SIZE - CELL_SIZE / 2;
         const drawY = this.y * CELL_SIZE - CELL_SIZE / 2;
+        
+        ctx.save();
+        if (this.isInvincible) {
+            ctx.globalAlpha = 0.7;
+            ctx.filter = 'hue-rotate(180deg) saturate(200%)';
+        }
+        
         if (this.isEating) {
             const elapsedTime = Date.now() - this.eatingAnimationStart;
             if (elapsedTime < this.eatingAnimationDuration) {
@@ -73,6 +94,8 @@ class Lucy extends GameObject {
         } else {
             ctx.drawImage(this.image, drawX, drawY, this.size, this.size);
         }
+        
+        ctx.restore();
     }
 }
 
@@ -84,7 +107,7 @@ class Treat extends GameObject {
 
 class PowerUp extends GameObject {
     constructor(x, y, type) {
-        super(x, y, CELL_SIZE, 'green', loadImage(type === 'pizza' ? 'pizza.svg' : 'hamburger.svg'));
+        super(x, y, CELL_SIZE, 'green', loadImage(type === 'pizza' ? 'pizza.svg' : type === 'hamburger' ? 'hamburger.svg' : 'bathtub.svg'));
         this.type = type;
     }
 }
@@ -153,7 +176,7 @@ function init() {
     }
 
     for (let i = 0; i < 5; i++) {
-        const type = Math.random() < 0.5 ? 'pizza' : 'hamburger';
+        const type = Math.random() < 0.33 ? 'pizza' : Math.random() < 0.66 ? 'hamburger' : 'bathtub';
         powerUps.push(new PowerUp(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS), type));
     }
 
@@ -163,6 +186,8 @@ function init() {
 }
 
 function update() {
+    lucy.updateInvincibility();
+
     treats = treats.filter(treat => {
         if (lucy.x === treat.x && lucy.y === treat.y) {
             score += 10;
@@ -178,6 +203,9 @@ function update() {
             score += 50;
             playSound('powerup.mp3');
             lucy.startEating();
+            if (powerUp.type === 'bathtub') {
+                lucy.startInvincibility();
+            }
             return false;
         }
         return true;
@@ -185,7 +213,7 @@ function update() {
 
     geese.forEach(goose => {
         goose.move();
-        if (lucy.x === goose.x && lucy.y === goose.y) {
+        if (lucy.x === goose.x && lucy.y === goose.y && !lucy.isInvincible) {
             gameOver();
         }
     });
@@ -213,6 +241,12 @@ function draw() {
     
     ctx.fillStyle = 'black';
     ctx.fillText(`Score: ${score}`, 10, 10);
+
+    if (lucy.isInvincible) {
+        const remainingTime = Math.ceil((lucy.invincibilityDuration - (Date.now() - lucy.invincibilityTimer)) / 1000);
+        ctx.fillStyle = 'blue';
+        ctx.fillText(`Invincible: ${remainingTime}s`, 10, 40);
+    }
 }
 
 function gameLoop() {
