@@ -36,12 +36,11 @@ class GameObject {
 class Lucy extends GameObject {
     constructor(x, y) {
         super(x, y, CELL_SIZE, 'yellow', loadImage('lucy.svg'));
-        this.direction = DIRECTIONS.RIGHT;
     }
 
-    move() {
-        this.x += this.direction.x;
-        this.y += this.direction.y;
+    move(direction) {
+        this.x += direction.x;
+        this.y += direction.y;
 
         if (this.x < 0) this.x = COLS - 1;
         if (this.x >= COLS) this.x = 0;
@@ -68,7 +67,7 @@ class Enemy extends GameObject {
         super(x, y, CELL_SIZE, 'red', loadImage('person.svg'));
         this.direction = getRandomDirection();
         this.moveCounter = 0;
-        this.moveFrequency = 3; // Move every 3 frames
+        this.moveFrequency = 6; // Move every 6 frames
     }
 
     move() {
@@ -129,8 +128,6 @@ function init() {
 }
 
 function update() {
-    lucy.move();
-
     // Check for treat collection
     treats = treats.filter(treat => {
         if (lucy.x === treat.x && lucy.y === treat.y) {
@@ -205,16 +202,16 @@ function playSound(soundFile) {
 document.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'ArrowUp':
-            lucy.direction = DIRECTIONS.UP;
+            lucy.move(DIRECTIONS.UP);
             break;
         case 'ArrowDown':
-            lucy.direction = DIRECTIONS.DOWN;
+            lucy.move(DIRECTIONS.DOWN);
             break;
         case 'ArrowLeft':
-            lucy.direction = DIRECTIONS.LEFT;
+            lucy.move(DIRECTIONS.LEFT);
             break;
         case 'ArrowRight':
-            lucy.direction = DIRECTIONS.RIGHT;
+            lucy.move(DIRECTIONS.RIGHT);
             break;
     }
 });
