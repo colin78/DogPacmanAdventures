@@ -5,7 +5,7 @@ const CELL_SIZE = 20;
 const ROWS = 30;
 const COLS = 40;
 
-let lucy, treats, powerUps, enemies, score;
+let lucy, treats, powerUps, geese, score;
 
 const DIRECTIONS = {
     UP: { x: 0, y: -1 },
@@ -62,12 +62,14 @@ class PowerUp extends GameObject {
     }
 }
 
-class Enemy extends GameObject {
+class Goose extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE, 'red', loadImage('person.svg'));
+        super(x, y, CELL_SIZE, 'white', loadImage('goose.svg'));
         this.direction = getRandomDirection();
         this.moveCounter = 0;
-        this.moveFrequency = 6; // Move every 6 frames
+        this.moveFrequency = 4; // Move every 4 frames (faster than before)
+        this.chaseMode = false;
+        this.chaseDuration = 0;
     }
 
     move() {
@@ -75,19 +77,44 @@ class Enemy extends GameObject {
         if (this.moveCounter >= this.moveFrequency) {
             this.moveCounter = 0;
 
-            if (Math.random() < 0.05) { // Reduced probability of changing direction
-                this.direction = getRandomDirection();
-            }
-
-            let newX = this.x + this.direction.x;
-            let newY = this.y + this.direction.y;
-
-            if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
-                this.direction = getRandomDirection();
+            if (this.chaseMode) {
+                this.chaseDuration++;
+                if (this.chaseDuration > 50) { // Chase for about 2 seconds (50 * 4 frames)
+                    this.chaseMode = false;
+                    this.chaseDuration = 0;
+                }
+                this.chasePlayer();
             } else {
-                this.x = newX;
-                this.y = newY;
+                if (Math.random() < 0.02) { // 2% chance to enter chase mode
+                    this.chaseMode = true;
+                } else if (Math.random() < 0.1) { // 10% chance to change direction when not chasing
+                    this.direction = getRandomDirection();
+                }
+                this.moveRandomly();
             }
+        }
+    }
+
+    moveRandomly() {
+        let newX = this.x + this.direction.x;
+        let newY = this.y + this.direction.y;
+
+        if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
+            this.direction = getRandomDirection();
+        } else {
+            this.x = newX;
+            this.y = newY;
+        }
+    }
+
+    chasePlayer() {
+        const dx = lucy.x - this.x;
+        const dy = lucy.y - this.y;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            this.x += Math.sign(dx);
+        } else {
+            this.y += Math.sign(dy);
         }
     }
 }
@@ -107,7 +134,7 @@ function init() {
     lucy = new Lucy(Math.floor(COLS / 2), Math.floor(ROWS / 2));
     treats = [];
     powerUps = [];
-    enemies = [];
+    geese = [];
     score = 0;
 
     // Generate treats
@@ -121,9 +148,9 @@ function init() {
         powerUps.push(new PowerUp(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS), type));
     }
 
-    // Generate enemies
-    for (let i = 0; i < 4; i++) {
-        enemies.push(new Enemy(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
+    // Generate geese
+    for (let i = 0; i < 5; i++) {
+        geese.push(new Goose(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
     }
 }
 
@@ -142,16 +169,16 @@ function update() {
     powerUps = powerUps.filter(powerUp => {
         if (lucy.x === powerUp.x && lucy.y === powerUp.y) {
             score += 50;
-            playSound('eat.mp3');
+            playSound('powerup.mp3');
             return false;
         }
         return true;
     });
 
-    // Move enemies
-    enemies.forEach(enemy => {
-        enemy.move();
-        if (lucy.x === enemy.x && lucy.y === enemy.y) {
+    // Move geese
+    geese.forEach(goose => {
+        goose.move();
+        if (lucy.x === goose.x && lucy.y === goose.y) {
             gameOver();
         }
     });
@@ -167,7 +194,7 @@ function draw() {
 
     treats.forEach(treat => treat.draw());
     powerUps.forEach(powerUp => powerUp.draw());
-    enemies.forEach(enemy => enemy.draw());
+    geese.forEach(goose => goose.draw());
     lucy.draw();
 
     // Draw score
