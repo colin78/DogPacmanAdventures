@@ -44,11 +44,14 @@ class Lucy extends GameObject {
         this.isInvincible = false;
         this.invincibilityTimer = 0;
         this.invincibilityDuration = 30000; // 30 seconds
+        this.hasZoomies = false;
+        this.zoomiesSpeed = 2; // Double speed during Zoomies
     }
 
     move(direction) {
-        this.x += direction.x;
-        this.y += direction.y;
+        const speed = this.hasZoomies ? this.zoomiesSpeed : 1;
+        this.x += direction.x * speed;
+        this.y += direction.y * speed;
 
         if (this.x < 0) this.x = COLS - 1;
         if (this.x >= COLS) this.x = 0;
@@ -63,12 +66,14 @@ class Lucy extends GameObject {
 
     startInvincibility() {
         this.isInvincible = true;
+        this.hasZoomies = true;
         this.invincibilityTimer = Date.now();
     }
 
     updateInvincibility() {
         if (this.isInvincible && Date.now() - this.invincibilityTimer >= this.invincibilityDuration) {
             this.isInvincible = false;
+            this.hasZoomies = false;
         }
     }
 
@@ -246,6 +251,11 @@ function draw() {
         const remainingTime = Math.ceil((lucy.invincibilityDuration - (Date.now() - lucy.invincibilityTimer)) / 1000);
         ctx.fillStyle = 'blue';
         ctx.fillText(`Invincible: ${remainingTime}s`, 10, 40);
+        
+        if (lucy.hasZoomies) {
+            ctx.fillStyle = 'purple';
+            ctx.fillText('Zoomies Active!', 10, 70);
+        }
     }
 }
 
