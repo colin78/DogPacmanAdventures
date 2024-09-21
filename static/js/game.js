@@ -35,7 +35,12 @@ class GameObject {
 
 class Lucy extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE, 'yellow', loadImage('lucy.svg'));
+        super(x, y, CELL_SIZE * 1.5, 'yellow', loadImage('lucy.svg'));
+        this.isEating = false;
+        this.eatingFrames = [loadImage('lucy_eating1.svg'), loadImage('lucy_eating2.svg')];
+        this.currentEatingFrame = 0;
+        this.eatingAnimationDuration = 500; // ms
+        this.eatingAnimationStart = 0;
     }
 
     move(direction) {
@@ -46,6 +51,26 @@ class Lucy extends GameObject {
         if (this.x >= COLS) this.x = 0;
         if (this.y < 0) this.y = ROWS - 1;
         if (this.y >= ROWS) this.y = 0;
+    }
+
+    startEating() {
+        this.isEating = true;
+        this.eatingAnimationStart = Date.now();
+    }
+
+    draw() {
+        if (this.isEating) {
+            const elapsedTime = Date.now() - this.eatingAnimationStart;
+            if (elapsedTime < this.eatingAnimationDuration) {
+                this.currentEatingFrame = Math.floor(elapsedTime / (this.eatingAnimationDuration / 2));
+                ctx.drawImage(this.eatingFrames[this.currentEatingFrame], this.x * CELL_SIZE, this.y * CELL_SIZE, this.size, this.size);
+            } else {
+                this.isEating = false;
+                ctx.drawImage(this.image, this.x * CELL_SIZE, this.y * CELL_SIZE, this.size, this.size);
+            }
+        } else {
+            ctx.drawImage(this.image, this.x * CELL_SIZE, this.y * CELL_SIZE, this.size, this.size);
+        }
     }
 }
 
@@ -145,6 +170,7 @@ function update() {
         if (lucy.x === treat.x && lucy.y === treat.y) {
             score += 10;
             playSound('eat.mp3');
+            lucy.startEating();
             return false;
         }
         return true;
@@ -155,6 +181,7 @@ function update() {
         if (lucy.x === powerUp.x && lucy.y === powerUp.y) {
             score += 50;
             playSound('powerup.mp3');
+            lucy.startEating();
             return false;
         }
         return true;
