@@ -285,12 +285,7 @@ function draw() {
         ctx.fillText(`Zoomies: ${remainingTime}s`, 10, 70);
     }
 
-    // Debug: Draw power-up positions
-    ctx.fillStyle = 'red';
-    ctx.font = '12px Arial';
-    powerUps.forEach((powerUp, index) => {
-        ctx.fillText(`${powerUp.type}`, powerUp.x * CELL_SIZE, powerUp.y * CELL_SIZE);
-    });
+    // Debug drawing section removed as requested
 }
 
 function gameLoop() {
