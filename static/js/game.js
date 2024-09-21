@@ -35,7 +35,7 @@ class GameObject {
 
 class Lucy extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE * 1.5, '#D2B48C', loadImage('lucy.svg'));
+        super(x, y, CELL_SIZE * 2, '#FFD700', loadImage('lucy.svg'));
         this.isEating = false;
         this.eatingFrames = [loadImage('lucy_eating1.svg'), loadImage('lucy_eating2.svg')];
         this.currentEatingFrame = 0;
@@ -59,17 +59,19 @@ class Lucy extends GameObject {
     }
 
     draw() {
+        const drawX = this.x * CELL_SIZE - CELL_SIZE / 2;
+        const drawY = this.y * CELL_SIZE - CELL_SIZE / 2;
         if (this.isEating) {
             const elapsedTime = Date.now() - this.eatingAnimationStart;
             if (elapsedTime < this.eatingAnimationDuration) {
                 this.currentEatingFrame = Math.floor(elapsedTime / (this.eatingAnimationDuration / 2));
-                ctx.drawImage(this.eatingFrames[this.currentEatingFrame], this.x * CELL_SIZE, this.y * CELL_SIZE, this.size, this.size);
+                ctx.drawImage(this.eatingFrames[this.currentEatingFrame], drawX, drawY, this.size, this.size);
             } else {
                 this.isEating = false;
-                ctx.drawImage(this.image, this.x * CELL_SIZE, this.y * CELL_SIZE, this.size, this.size);
+                ctx.drawImage(this.image, drawX, drawY, this.size, this.size);
             }
         } else {
-            ctx.drawImage(this.image, this.x * CELL_SIZE, this.y * CELL_SIZE, this.size, this.size);
+            ctx.drawImage(this.image, drawX, drawY, this.size, this.size);
         }
     }
 }
