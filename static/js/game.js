@@ -104,7 +104,7 @@ function getRandomDirection() {
 }
 
 function init() {
-    lucy = new Lucy(0, 0);
+    lucy = new Lucy(Math.floor(COLS / 2), Math.floor(ROWS / 2));
     treats = [];
     powerUps = [];
     enemies = [];
