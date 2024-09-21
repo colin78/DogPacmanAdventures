@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucy's Treat Adventure</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="start-screen" class="screen">
+            <h1>Lucy's Treat Adventure</h1>
+            <p>Help Lucy collect treats and avoid the leashes!</p>
+            <button id="start-button">Start Game</button>
+        </div>
+        <div id="game-over-screen" class="screen">
+            <h1>Game Over</h1>
+            <p>Your score: <span id="final-score"></span></p>
+            <button id="restart-button">Play Again</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>
