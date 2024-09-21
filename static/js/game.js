@@ -68,10 +68,20 @@ class Goose extends GameObject {
         this.direction = getRandomDirection();
         this.moveCounter = 0;
         this.moveFrequency = 16; // Slowed down movement
+        this.directionChangeTimer = 0;
+        this.directionChangeInterval = Math.random() * 10000 + 10000; // Random interval between 10-20 seconds
     }
 
     move() {
         this.moveCounter++;
+        this.directionChangeTimer += 16; // Assuming 60 FPS, each frame is about 16ms
+
+        if (this.directionChangeTimer >= this.directionChangeInterval) {
+            this.direction = getRandomDirection();
+            this.directionChangeTimer = 0;
+            this.directionChangeInterval = Math.random() * 10000 + 10000; // Set new random interval
+        }
+
         if (this.moveCounter >= this.moveFrequency) {
             this.moveCounter = 0;
             
