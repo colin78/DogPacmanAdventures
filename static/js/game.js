@@ -35,7 +35,7 @@ class GameObject {
 
 class Lucy extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE * 1.5, 'yellow', loadImage('lucy.svg'));
+        super(x, y, CELL_SIZE * 1.5, '#D2B48C', loadImage('lucy.svg'));
         this.isEating = false;
         this.eatingFrames = [loadImage('lucy_eating1.svg'), loadImage('lucy_eating2.svg')];
         this.currentEatingFrame = 0;
@@ -126,7 +126,7 @@ class Goose extends GameObject {
 
 function loadImage(name) {
     const img = new Image();
-    img.src = `/static/assets/${name}`;
+    img.src = `/static/assets/${name}?v=${Date.now()}`; // Add cache-busting query parameter
     return img;
 }
 
