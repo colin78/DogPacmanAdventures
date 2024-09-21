@@ -46,6 +46,8 @@ class Lucy extends GameObject {
         this.invincibilityDuration = 30000; // 30 seconds
         this.hasZoomies = false;
         this.zoomiesSpeed = 2; // Double speed during Zoomies
+        this.zoomiesDuration = 30000; // 30 seconds
+        this.zoomiesTimer = 0;
     }
 
     move(direction) {
@@ -66,13 +68,20 @@ class Lucy extends GameObject {
 
     startInvincibility() {
         this.isInvincible = true;
-        this.hasZoomies = true;
         this.invincibilityTimer = Date.now();
     }
 
-    updateInvincibility() {
+    startZoomies() {
+        this.hasZoomies = true;
+        this.zoomiesTimer = Date.now();
+        this.startInvincibility(); // Zoomies also make Lucy invincible
+    }
+
+    updatePowerUps() {
         if (this.isInvincible && Date.now() - this.invincibilityTimer >= this.invincibilityDuration) {
             this.isInvincible = false;
+        }
+        if (this.hasZoomies && Date.now() - this.zoomiesTimer >= this.zoomiesDuration) {
             this.hasZoomies = false;
         }
     }
@@ -82,9 +91,12 @@ class Lucy extends GameObject {
         const drawY = this.y * CELL_SIZE - CELL_SIZE / 2;
         
         ctx.save();
-        if (this.isInvincible) {
+        if (this.hasZoomies) {
             ctx.globalAlpha = 0.7;
-            ctx.filter = 'hue-rotate(180deg) saturate(200%)';
+            ctx.filter = 'hue-rotate(240deg) saturate(200%)'; // Blue tint for Zoomies
+        } else if (this.isInvincible) {
+            ctx.globalAlpha = 0.7;
+            ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
         }
         
         if (this.isEating) {
@@ -114,6 +126,12 @@ class PowerUp extends GameObject {
     constructor(x, y, type) {
         super(x, y, CELL_SIZE, 'green', loadImage(type === 'pizza' ? 'pizza.svg' : type === 'hamburger' ? 'hamburger.svg' : 'bathtub.svg'));
         this.type = type;
+        console.log(`Created PowerUp: ${type} at (${x}, ${y})`); // Debug log
+    }
+
+    draw() {
+        super.draw();
+        console.log(`Drawing PowerUp: ${this.type} at (${this.x}, ${this.y})`); // Debug log
     }
 }
 
@@ -188,10 +206,15 @@ function init() {
     for (let i = 0; i < 5; i++) {
         geese.push(new Goose(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
     }
+
+    console.log(`Initialized ${powerUps.length} power-ups:`); // Debug log
+    powerUps.forEach((powerUp, index) => {
+        console.log(`PowerUp ${index + 1}: ${powerUp.type} at (${powerUp.x}, ${powerUp.y})`);
+    });
 }
 
 function update() {
-    lucy.updateInvincibility();
+    lucy.updatePowerUps();
 
     treats = treats.filter(treat => {
         if (lucy.x === treat.x && lucy.y === treat.y) {
@@ -209,8 +232,11 @@ function update() {
             playSound('powerup.mp3');
             lucy.startEating();
             if (powerUp.type === 'bathtub') {
+                lucy.startZoomies();
+            } else {
                 lucy.startInvincibility();
             }
+            console.log(`Collected PowerUp: ${powerUp.type}`); // Debug log
             return false;
         }
         return true;
@@ -249,14 +275,22 @@ function draw() {
 
     if (lucy.isInvincible) {
         const remainingTime = Math.ceil((lucy.invincibilityDuration - (Date.now() - lucy.invincibilityTimer)) / 1000);
-        ctx.fillStyle = 'blue';
+        ctx.fillStyle = 'green';
         ctx.fillText(`Invincible: ${remainingTime}s`, 10, 40);
-        
-        if (lucy.hasZoomies) {
-            ctx.fillStyle = 'purple';
-            ctx.fillText('Zoomies Active!', 10, 70);
-        }
     }
+    
+    if (lucy.hasZoomies) {
+        const remainingTime = Math.ceil((lucy.zoomiesDuration - (Date.now() - lucy.zoomiesTimer)) / 1000);
+        ctx.fillStyle = 'blue';
+        ctx.fillText(`Zoomies: ${remainingTime}s`, 10, 70);
+    }
+
+    // Debug: Draw power-up positions
+    ctx.fillStyle = 'red';
+    ctx.font = '12px Arial';
+    powerUps.forEach((powerUp, index) => {
+        ctx.fillText(`${powerUp.type}`, powerUp.x * CELL_SIZE, powerUp.y * CELL_SIZE);
+    });
 }
 
 function gameLoop() {
