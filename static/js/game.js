@@ -64,10 +64,10 @@ class PowerUp extends GameObject {
 
 class Goose extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE, 'white', loadImage('goose.svg'));
+        super(x, y, CELL_SIZE * 1.5, 'white', loadImage('goose.svg'));
         this.direction = getRandomDirection();
         this.moveCounter = 0;
-        this.moveFrequency = 4; // Move every 4 frames (faster than before)
+        this.moveFrequency = 8; // Slowed down movement
         this.chaseMode = false;
         this.chaseDuration = 0;
     }
@@ -79,15 +79,15 @@ class Goose extends GameObject {
 
             if (this.chaseMode) {
                 this.chaseDuration++;
-                if (this.chaseDuration > 50) { // Chase for about 2 seconds (50 * 4 frames)
+                if (this.chaseDuration > 50) {
                     this.chaseMode = false;
                     this.chaseDuration = 0;
                 }
                 this.chasePlayer();
             } else {
-                if (Math.random() < 0.02) { // 2% chance to enter chase mode
+                if (Math.random() < 0.02) {
                     this.chaseMode = true;
-                } else if (Math.random() < 0.1) { // 10% chance to change direction when not chasing
+                } else if (Math.random() < 0.1) {
                     this.direction = getRandomDirection();
                 }
                 this.moveRandomly();
