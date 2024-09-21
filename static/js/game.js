@@ -67,54 +67,24 @@ class Goose extends GameObject {
         super(x, y, CELL_SIZE * 1.5, 'white', loadImage('goose.svg'));
         this.direction = getRandomDirection();
         this.moveCounter = 0;
-        this.moveFrequency = 8; // Slowed down movement
-        this.chaseMode = false;
-        this.chaseDuration = 0;
+        this.moveFrequency = 16; // Slowed down movement
     }
 
     move() {
         this.moveCounter++;
         if (this.moveCounter >= this.moveFrequency) {
             this.moveCounter = 0;
+            
+            let newX = this.x + this.direction.x;
+            let newY = this.y + this.direction.y;
 
-            if (this.chaseMode) {
-                this.chaseDuration++;
-                if (this.chaseDuration > 50) {
-                    this.chaseMode = false;
-                    this.chaseDuration = 0;
-                }
-                this.chasePlayer();
+            if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
+                // Change direction when hitting a wall
+                this.direction = getRandomDirection();
             } else {
-                if (Math.random() < 0.02) {
-                    this.chaseMode = true;
-                } else if (Math.random() < 0.1) {
-                    this.direction = getRandomDirection();
-                }
-                this.moveRandomly();
+                this.x = newX;
+                this.y = newY;
             }
-        }
-    }
-
-    moveRandomly() {
-        let newX = this.x + this.direction.x;
-        let newY = this.y + this.direction.y;
-
-        if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
-            this.direction = getRandomDirection();
-        } else {
-            this.x = newX;
-            this.y = newY;
-        }
-    }
-
-    chasePlayer() {
-        const dx = lucy.x - this.x;
-        const dy = lucy.y - this.y;
-
-        if (Math.abs(dx) > Math.abs(dy)) {
-            this.x += Math.sign(dx);
-        } else {
-            this.y += Math.sign(dy);
         }
     }
 }
@@ -126,7 +96,12 @@ function loadImage(name) {
 }
 
 function getRandomDirection() {
-    const directions = Object.values(DIRECTIONS);
+    const directions = [
+        { x: 0, y: -1 }, // Up
+        { x: 0, y: 1 },  // Down
+        { x: -1, y: 0 }, // Left
+        { x: 1, y: 0 }   // Right
+    ];
     return directions[Math.floor(Math.random() * directions.length)];
 }
 
