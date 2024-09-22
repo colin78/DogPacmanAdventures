@@ -102,7 +102,8 @@ class Lucy extends GameObject {
         ctx.save();
         if (this.hasZoomies) {
             ctx.globalAlpha = 0.7;
-            ctx.filter = 'hue-rotate(240deg) saturate(200%)'; // Blue tint for Zoomies
+            // ctx.filter = 'hue-rotate(240deg) saturate(200%)'; // Blue tint for Zoomies
+            ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
         } else if (this.isInvincible) {
             ctx.globalAlpha = 0.7;
             ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
@@ -295,7 +296,7 @@ function draw() {
     
     if (lucy.hasZoomies) {
         const remainingTime = Math.ceil((lucy.zoomiesDuration - (Date.now() - lucy.zoomiesTimer)) / 1000);
-        ctx.fillStyle = 'blue';
+        // ctx.fillStyle = 'blue';
         ctx.fillText(`Zoomies: ${remainingTime}s`, 10, 70);
     }
 }
