@@ -45,8 +45,8 @@ class Lucy extends GameObject {
         this.invincibilityTimer = 0;
         this.invincibilityDuration = 30000; // 30 seconds
         this.hasZoomies = false;
-        this.zoomiesSpeed = 2; // Double speed during Zoomies
-        this.zoomiesDuration = 30000; // 30 seconds
+        this.zoomiesSpeed = 1; // Double speed during Zoomies
+        this.zoomiesDuration = 10000; // 30 seconds
         this.zoomiesTimer = 0;
     }
 
