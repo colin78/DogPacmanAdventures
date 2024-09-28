@@ -35,9 +35,9 @@ class GameObject {
 
 class Lucy extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE * 2, '#FFD700', loadImage('lucy.svg'));
+        super(x, y, CELL_SIZE * 2, '#FFD700', loadImage('dog_face.svg'));
         this.isEating = false;
-        this.eatingFrames = [loadImage('lucy_eating1.svg'), loadImage('lucy_eating2.svg')];
+        this.eatingFrames = [loadImage('dog_face_eating1.svg'), loadImage('dog_face_eating2.svg')];
         this.currentEatingFrame = 0;
         this.eatingAnimationDuration = 500;
         this.eatingAnimationStart = 0;
@@ -82,7 +82,6 @@ class Lucy extends GameObject {
         this.hasZoomies = true;
         this.zoomiesTimer = Date.now();
         this.startInvincibility();
-        // Display "Bathtub zoomies activated!" message
         showMessage("Bathtub zoomies activated!", 3000);
     }
 
@@ -102,7 +101,6 @@ class Lucy extends GameObject {
         ctx.save();
         if (this.hasZoomies) {
             ctx.globalAlpha = 0.7;
-            // ctx.filter = 'hue-rotate(240deg) saturate(200%)'; // Blue tint for Zoomies
             ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
         } else if (this.isInvincible) {
             ctx.globalAlpha = 0.7;
@@ -229,7 +227,7 @@ function init() {
 
 function update() {
     lucy.updatePowerUps();
-    lucy.moveRandomly(); // Add this line
+    lucy.moveRandomly();
 
     treats = treats.filter(treat => {
         if (lucy.x === treat.x && lucy.y === treat.y) {
@@ -296,7 +294,6 @@ function draw() {
     
     if (lucy.hasZoomies) {
         const remainingTime = Math.ceil((lucy.zoomiesDuration - (Date.now() - lucy.zoomiesTimer)) / 1000);
-        // ctx.fillStyle = 'blue';
         ctx.fillText(`Zoomies: ${remainingTime}s`, 10, 70);
     }
 }
