@@ -54,3 +54,33 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+/* GitHub link styles */
+#github-link-top {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+#github-link-top a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#github-link-top a:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.github-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
