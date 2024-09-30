@@ -35,9 +35,9 @@ class GameObject {
 
 class Lucy extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE * 2, '#FFD700', loadImage('dog_face.svg'));
+        super(x, y, CELL_SIZE * 2, '#FFD700', loadImage('dog_face_realistic.svg'));
         this.isEating = false;
-        this.eatingFrames = [loadImage('dog_face_eating1.svg'), loadImage('dog_face_eating2.svg')];
+        this.eatingFrames = [loadImage('dog_face_eating_1.svg'), loadImage('dog_face_eating_2.svg')];
         this.currentEatingFrame = 0;
         this.eatingAnimationDuration = 500;
         this.eatingAnimationStart = 0;
