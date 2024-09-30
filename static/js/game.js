@@ -149,7 +149,7 @@ class PowerUp extends GameObject {
 
 class Goose extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE * 1.5, 'white', loadImage('goose.svg'));
+        super(x, y, CELL_SIZE * 1.5, 'white', loadImage('goose_large.svg'));
         this.direction = getRandomDirection();
         this.moveCounter = 0;
         this.moveFrequency = 16;
