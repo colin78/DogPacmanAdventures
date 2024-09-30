@@ -55,40 +55,33 @@ button:hover {
     background-color: #45a049;
 }
 
-/* Updated GitHub link styles */
-#github-link-top {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
+#github-link {
+    text-align: center;
+    margin-top: 20px;
 }
-
-#github-link-top a {
+#github-link a {
+    text-decoration: none;
+    color: #333;
     display: flex;
     align-items: center;
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    background-color: #24292e;
-    padding: 8px 12px;
-    border-radius: 30px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    gap: 10px;
 }
-
-#github-link-top a:hover {
-    background-color: #0366d6;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
 .github-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-    filter: invert(1);
+    width: 20px;
+    height: 20px;
 }
 
-#github-link-top span {
+#github-link-top {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+#github-link-top a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-size: 14px;
 }
