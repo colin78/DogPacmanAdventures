@@ -155,6 +155,7 @@ class Goose extends GameObject {
         this.moveFrequency = 16;
         this.directionChangeTimer = 0;
         this.directionChangeInterval = Math.random() * 5000 + 5000;
+        this.rotation = 0; // Add rotation property
     }
 
     move() {
@@ -179,7 +180,21 @@ class Goose extends GameObject {
                 this.x = newX;
                 this.y = newY;
             }
+
+            // Update rotation based on direction
+            if (this.direction.x === 1) this.rotation = 0; // Right
+            else if (this.direction.x === -1) this.rotation = Math.PI; // Left
+            else if (this.direction.y === -1) this.rotation = -Math.PI / 2; // Up
+            else if (this.direction.y === 1) this.rotation = Math.PI / 2; // Down
         }
+    }
+
+    draw() {
+        ctx.save();
+        ctx.translate(this.x * CELL_SIZE + this.size / 2, this.y * CELL_SIZE + this.size / 2);
+        ctx.rotate(this.rotation);
+        ctx.drawImage(this.image, -this.size / 2, -this.size / 2, this.size, this.size);
+        ctx.restore();
     }
 }
 
