@@ -181,17 +181,18 @@ class Goose extends GameObject {
                 this.y = newY;
             }
 
-            if (this.direction.x === 1) this.rotation = Math.PI;
-            else if (this.direction.x === -1) this.rotation = 0;
-            else if (this.direction.y === -1) this.rotation = -Math.PI / 2;
-            else if (this.direction.y === 1) this.rotation = Math.PI / 2;
+            // Update rotation based on direction
+            if (this.direction.x === 1) this.rotation = 0; // Right
+            else if (this.direction.x === -1) this.rotation = Math.PI; // Left
+            else if (this.direction.y === -1) this.rotation = -Math.PI / 2; // Up
+            else if (this.direction.y === 1) this.rotation = Math.PI / 2; // Down
         }
     }
 
     draw() {
         ctx.save();
         ctx.translate(this.x * CELL_SIZE + this.size / 2, this.y * CELL_SIZE + this.size / 2);
-        ctx.rotate(this.rotation);
+        ctx.rotate(this.rotation + Math.PI / 2);
         ctx.drawImage(this.image, -this.size / 2, -this.size / 2, this.size, this.size);
         ctx.restore();
     }
