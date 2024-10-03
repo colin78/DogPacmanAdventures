@@ -39,8 +39,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #e6f3ff; /* Changed to a solid light blue color */
-    color: #333; /* Updated text color for better contrast */
+    background-color: #4d485b; /* Changed to a solid light blue color */
+    color: #f6f4f4; /* Updated text color for better contrast */
 }
 
 .screen h1 {
