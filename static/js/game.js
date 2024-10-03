@@ -43,10 +43,10 @@ class Lucy extends GameObject {
         this.eatingAnimationStart = 0;
         this.isInvincible = false;
         this.invincibilityTimer = 0;
-        this.invincibilityDuration = 30000; // 30 seconds
+        this.invincibilityDuration = 30000;
         this.hasZoomies = false;
-        this.zoomiesSpeed = 1; // Double speed during Zoomies
-        this.zoomiesDuration = 10000; // 30 seconds
+        this.zoomiesSpeed = 1;
+        this.zoomiesDuration = 10000;
         this.zoomiesTimer = 0;
     }
 
@@ -101,10 +101,10 @@ class Lucy extends GameObject {
         ctx.save();
         if (this.hasZoomies) {
             ctx.globalAlpha = 0.7;
-            ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
+            ctx.filter = 'hue-rotate(180deg) saturate(200%)';
         } else if (this.isInvincible) {
             ctx.globalAlpha = 0.7;
-            ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
+            ctx.filter = 'hue-rotate(180deg) saturate(200%)';
         }
         
         if (this.isEating) {
@@ -149,13 +149,15 @@ class PowerUp extends GameObject {
 
 class Goose extends GameObject {
     constructor(x, y) {
-        super(x, y, CELL_SIZE * 1.5, 'white', loadImage('goose_large.svg'));
+        super(x, y, CELL_SIZE * 1.5, 'white');
+        this.imageRight = loadImage('goose_large.svg');
+        this.imageLeft = loadImage('goose_large_flipped.svg');
         this.direction = getRandomDirection();
         this.moveCounter = 0;
         this.moveFrequency = 16;
         this.directionChangeTimer = 0;
         this.directionChangeInterval = Math.random() * 5000 + 5000;
-        this.rotation = 0; // Add rotation property
+        this.rotation = 0;
     }
 
     move() {
@@ -181,19 +183,24 @@ class Goose extends GameObject {
                 this.y = newY;
             }
 
-            // Update rotation based on direction
-            if (this.direction.x === 1) this.rotation = 0; // Right
-            else if (this.direction.x === -1) this.rotation = Math.PI; // Left
-            else if (this.direction.y === -1) this.rotation = -Math.PI / 2; // Up
-            else if (this.direction.y === 1) this.rotation = Math.PI / 2; // Down
+            if (this.direction.x === 1) this.rotation = 0;
+            else if (this.direction.x === -1) this.rotation = Math.PI;
+            else if (this.direction.y === -1) this.rotation = -Math.PI / 2;
+            else if (this.direction.y === 1) this.rotation = Math.PI / 2;
         }
     }
 
     draw() {
         ctx.save();
         ctx.translate(this.x * CELL_SIZE + this.size / 2, this.y * CELL_SIZE + this.size / 2);
-        ctx.rotate(this.rotation);
-        ctx.drawImage(this.image, -this.size / 2, -this.size / 2, this.size, this.size);
+        
+        if (this.direction.x === -1) {
+            ctx.drawImage(this.imageLeft, -this.size / 2, -this.size / 2, this.size, this.size);
+        } else {
+            ctx.rotate(this.rotation);
+            ctx.drawImage(this.imageRight, -this.size / 2, -this.size / 2, this.size, this.size);
+        }
+        
         ctx.restore();
     }
 }
