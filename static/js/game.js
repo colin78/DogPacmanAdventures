@@ -328,13 +328,18 @@ function draw() {
     }
 }
 
+let animationFrameId;
+
 function gameLoop() {
     update();
     draw();
-    requestAnimationFrame(gameLoop);
+    animationFrameId = requestAnimationFrame(gameLoop);
 }
 
 function startGame() {
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
     init();
     gameRunning = true;
     gameLoop();
