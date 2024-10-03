@@ -7,6 +7,7 @@ const COLS = 40;
 
 let lucy, treats, powerUps, geese, score;
 let gameRunning = false;
+let initialTreats, initialPowerUps, initialGeese;
 
 const DIRECTIONS = {
     UP: { x: 0, y: -1 },
@@ -155,7 +156,7 @@ class Goose extends GameObject {
         this.imageLeft = loadImage('goose_large_flipped.svg');
         this.direction = getRandomDirection();
         this.moveCounter = 0;
-        this.moveFrequency = 16;
+        this.moveFrequency = 16; // Set to a constant value
         this.directionChangeTimer = 0;
         this.directionChangeInterval = Math.random() * 5000 + 5000;
         this.rotation = 0;
@@ -222,30 +223,34 @@ function getRandomDirection() {
     return directions[Math.floor(Math.random() * directions.length)];
 }
 
-function init() {
-    lucy = new Lucy(Math.floor(COLS / 2), Math.floor(ROWS / 2));
-    treats = [];
-    powerUps = [];
-    geese = [];
-    score = 0;
+function generateInitialState() {
+    initialTreats = [];
+    initialPowerUps = [];
+    initialGeese = [];
 
     for (let i = 0; i < 100; i++) {
-        treats.push(new Treat(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
+        initialTreats.push({x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS)});
     }
 
     for (let i = 0; i < 5; i++) {
         const type = Math.random() < 0.4 ? 'bathtub' : Math.random() < 0.7 ? 'pizza' : 'hamburger';
-        powerUps.push(new PowerUp(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS), type));
+        initialPowerUps.push({x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS), type: type});
     }
 
     for (let i = 0; i < 5; i++) {
-        geese.push(new Goose(Math.floor(Math.random() * COLS), Math.floor(Math.random() * ROWS)));
+        initialGeese.push({x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS)});
     }
+}
 
-    console.log(`Initialized ${powerUps.length} power-ups:`);
-    powerUps.forEach((powerUp, index) => {
-        console.log(`PowerUp ${index + 1}: ${powerUp.type} at (${powerUp.x}, ${powerUp.y})`);
-    });
+// Call this function when the page loads
+generateInitialState();
+
+function init() {
+    lucy = new Lucy(Math.floor(COLS / 2), Math.floor(ROWS / 2));
+    treats = initialTreats.map(t => new Treat(t.x, t.y));
+    powerUps = initialPowerUps.map(p => new PowerUp(p.x, p.y, p.type));
+    geese = initialGeese.map(g => new Goose(g.x, g.y));
+    score = 0;
 }
 
 function update() {
