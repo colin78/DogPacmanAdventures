@@ -386,9 +386,11 @@ document.getElementById('start-button').addEventListener('click', () => {
     gameLoop();
 });
 
-document.getElementById('restart-button').addEventListener('click', () => {
+const restartButton = document.getElementById('restart-button');
+restartButton.addEventListener('click', () => {
     document.getElementById('game-over-screen').style.display = 'none';
     init();
+    gameLoop();
 });
 
 document.getElementById('game-over-screen').style.display = 'none';
