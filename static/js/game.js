@@ -245,11 +245,6 @@ function init() {
     powerUps.forEach((powerUp, index) => {
         console.log(`PowerUp ${index + 1}: ${powerUp.type} at (${powerUp.x}, ${powerUp.y})`);
     });
-
-    // Show the game canvas and hide other screens
-    document.getElementById('gameCanvas').style.display = 'block';
-    document.getElementById('start-screen').style.display = 'none';
-    document.getElementById('game-over-screen').style.display = 'none';
 }
 
 function update() {
@@ -326,14 +321,18 @@ function draw() {
 }
 
 function gameOver() {
+    cancelAnimationFrame(gameLoopId);
     playSound('gameover.mp3');
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over-screen').style.display = 'flex';
+    document.getElementById('gameCanvas').style.display = 'none';
 }
 
 function gameWin() {
+    cancelAnimationFrame(gameLoopId);
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over-screen').style.display = 'flex';
+    document.getElementById('gameCanvas').style.display = 'none';
     document.querySelector('#game-over-screen h1').textContent = 'You Win!';
 }
 
@@ -379,26 +378,31 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('start-screen').style.display = 'flex';
+    document.getElementById('game-over-screen').style.display = 'none';
+    document.getElementById('gameCanvas').style.display = 'none';
+});
+
 document.getElementById('start-button').addEventListener('click', () => {
     document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('gameCanvas').style.display = 'block';
     init();
     gameLoop();
 });
 
 document.getElementById('restart-button').addEventListener('click', () => {
     document.getElementById('game-over-screen').style.display = 'none';
+    document.getElementById('gameCanvas').style.display = 'block';
     init();
     gameLoop();
 });
 
 document.getElementById('return-home-button').addEventListener('click', () => {
     cancelAnimationFrame(gameLoopId);
-    
     document.getElementById('gameCanvas').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
-    
     document.getElementById('start-screen').style.display = 'flex';
-    
     lucy = null;
     treats = [];
     powerUps = [];
@@ -413,5 +417,3 @@ function gameLoop() {
     draw();
     gameLoopId = requestAnimationFrame(gameLoop);
 }
-
-document.getElementById('game-over-screen').style.display = 'none';
