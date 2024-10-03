@@ -344,6 +344,7 @@ function startGame() {
     gameRunning = true;
     gameLoop();
     homeButton.style.display = 'block';
+    restartButton.style.display = 'block';
 }
 
 function gameOver() {
@@ -429,10 +430,10 @@ homeButton.addEventListener('click', () => {
     cancelAnimationFrame(animationFrameId);
 });
 
+// Hide game over screen and buttons initially
 document.getElementById('game-over-screen').style.display = 'none';
 restartButton.style.display = 'none';
 homeButton.style.display = 'none';
 
-document.getElementById('start-button').addEventListener('click', () => {
-    restartButton.style.display = 'block';
-});
+// Show start screen
+document.getElementById('start-screen').style.display = 'flex';
