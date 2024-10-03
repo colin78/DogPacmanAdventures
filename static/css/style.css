@@ -39,8 +39,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
+    background-color: #e6f3ff; /* Changed to a solid light blue color */
+    color: #333; /* Updated text color for better contrast */
 }
 
 .screen h1 {

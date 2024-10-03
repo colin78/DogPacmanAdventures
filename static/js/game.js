@@ -427,6 +427,7 @@ homeButton.addEventListener('click', () => {
     gameRunning = false;
     document.getElementById('start-screen').style.display = 'flex';
     document.getElementById('game-over-screen').style.display = 'none';
+    // document.getElementById('gameCanvas').style.display = 'none';
     cancelAnimationFrame(animationFrameId);
 });
 
