@@ -245,6 +245,11 @@ function init() {
     powerUps.forEach((powerUp, index) => {
         console.log(`PowerUp ${index + 1}: ${powerUp.type} at (${powerUp.x}, ${powerUp.y})`);
     });
+
+    // Show the game canvas and hide other screens
+    document.getElementById('gameCanvas').style.display = 'block';
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'none';
 }
 
 function update() {
@@ -320,12 +325,6 @@ function draw() {
     }
 }
 
-function gameLoop() {
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
 function gameOver() {
     playSound('gameover.mp3');
     document.getElementById('final-score').textContent = score;
@@ -389,6 +388,30 @@ document.getElementById('start-button').addEventListener('click', () => {
 document.getElementById('restart-button').addEventListener('click', () => {
     document.getElementById('game-over-screen').style.display = 'none';
     init();
+    gameLoop();
 });
+
+document.getElementById('return-home-button').addEventListener('click', () => {
+    cancelAnimationFrame(gameLoopId);
+    
+    document.getElementById('gameCanvas').style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'none';
+    
+    document.getElementById('start-screen').style.display = 'flex';
+    
+    lucy = null;
+    treats = [];
+    powerUps = [];
+    geese = [];
+    score = 0;
+});
+
+let gameLoopId;
+
+function gameLoop() {
+    update();
+    draw();
+    gameLoopId = requestAnimationFrame(gameLoop);
+}
 
 document.getElementById('game-over-screen').style.display = 'none';

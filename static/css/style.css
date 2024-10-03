@@ -85,3 +85,24 @@ button:hover {
     gap: 5px;
     font-size: 14px;
 }
+
+#return-home {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+#return-home-button {
+    font-size: 14px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#return-home-button:hover {
+    background-color: #45a049;
+}
