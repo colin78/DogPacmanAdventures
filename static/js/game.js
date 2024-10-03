@@ -6,6 +6,7 @@ const ROWS = 30;
 const COLS = 40;
 
 let lucy, treats, powerUps, geese, score;
+let gameRunning = false;
 
 const DIRECTIONS = {
     UP: { x: 0, y: -1 },
@@ -248,6 +249,8 @@ function init() {
 }
 
 function update() {
+    if (!gameRunning) return;
+
     lucy.updatePowerUps();
     lucy.moveRandomly();
 
@@ -326,13 +329,21 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+function startGame() {
+    init();
+    gameRunning = true;
+    gameLoop();
+}
+
 function gameOver() {
+    gameRunning = false;
     playSound('gameover.mp3');
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over-screen').style.display = 'flex';
 }
 
 function gameWin() {
+    gameRunning = false;
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over-screen').style.display = 'flex';
     document.querySelector('#game-over-screen h1').textContent = 'You Win!';
@@ -364,6 +375,7 @@ function showMessage(text, duration) {
 }
 
 document.addEventListener('keydown', (e) => {
+    if (!gameRunning) return;
     switch (e.key) {
         case 'ArrowUp':
             lucy.move(DIRECTIONS.UP);
@@ -382,15 +394,24 @@ document.addEventListener('keydown', (e) => {
 
 document.getElementById('start-button').addEventListener('click', () => {
     document.getElementById('start-screen').style.display = 'none';
-    init();
-    gameLoop();
+    startGame();
+});
+
+document.getElementById('play-again-button').addEventListener('click', () => {
+    document.getElementById('game-over-screen').style.display = 'none';
+    startGame();
 });
 
 const restartButton = document.getElementById('restart-button');
 restartButton.addEventListener('click', () => {
-    document.getElementById('game-over-screen').style.display = 'none';
-    init();
-    gameLoop();
+    if (gameRunning) {
+        startGame();
+    }
 });
 
 document.getElementById('game-over-screen').style.display = 'none';
+restartButton.style.display = 'none';
+
+document.getElementById('start-button').addEventListener('click', () => {
+    restartButton.style.display = 'block';
+});

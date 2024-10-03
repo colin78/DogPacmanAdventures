@@ -14,8 +14,10 @@
         </a>
     </div>
     <div id="game-container">
+        <div id="game-header">
+            <button id="restart-button" class="game-button">Restart</button>
+        </div>
         <canvas id="gameCanvas" width="800" height="600"></canvas>
-        <button id="restart-button" class="game-button">Restart</button>
         <div id="start-screen" class="screen">
             <h1>Lucy's Treat Adventure</h1>
             <p>Help Lucy collect treats and avoid the geese!</p>
@@ -24,7 +26,7 @@
         <div id="game-over-screen" class="screen">
             <h1>Game Over</h1>
             <p>Your score: <span id="final-score"></span></p>
-            <button id="restart-button">Play Again</button>
+            <button id="play-again-button">Play Again</button>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/game.js') }}"></script>
