@@ -43,10 +43,10 @@ class Lucy extends GameObject {
         this.eatingAnimationStart = 0;
         this.isInvincible = false;
         this.invincibilityTimer = 0;
-        this.invincibilityDuration = 30000;
+        this.invincibilityDuration = 30000; // 30 seconds
         this.hasZoomies = false;
-        this.zoomiesSpeed = 1;
-        this.zoomiesDuration = 10000;
+        this.zoomiesSpeed = 1; // Double speed during Zoomies
+        this.zoomiesDuration = 10000; // 30 seconds
         this.zoomiesTimer = 0;
     }
 
@@ -101,10 +101,10 @@ class Lucy extends GameObject {
         ctx.save();
         if (this.hasZoomies) {
             ctx.globalAlpha = 0.7;
-            ctx.filter = 'hue-rotate(180deg) saturate(200%)';
+            ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
         } else if (this.isInvincible) {
             ctx.globalAlpha = 0.7;
-            ctx.filter = 'hue-rotate(180deg) saturate(200%)';
+            ctx.filter = 'hue-rotate(180deg) saturate(200%)'; // Green tint for regular invincibility
         }
         
         if (this.isEating) {
@@ -155,7 +155,7 @@ class Goose extends GameObject {
         this.moveFrequency = 16;
         this.directionChangeTimer = 0;
         this.directionChangeInterval = Math.random() * 5000 + 5000;
-        this.rotation = 0;
+        this.rotation = 0; // Add rotation property
     }
 
     move() {
@@ -192,7 +192,7 @@ class Goose extends GameObject {
     draw() {
         ctx.save();
         ctx.translate(this.x * CELL_SIZE + this.size / 2, this.y * CELL_SIZE + this.size / 2);
-        ctx.rotate(this.rotation + Math.PI / 2);
+        ctx.rotate(this.rotation);
         ctx.drawImage(this.image, -this.size / 2, -this.size / 2, this.size, this.size);
         ctx.restore();
     }
