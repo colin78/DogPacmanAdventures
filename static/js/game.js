@@ -156,7 +156,7 @@ class Goose extends GameObject {
         this.imageLeft = loadImage('goose_large_flipped.svg');
         this.direction = getRandomDirection();
         this.moveCounter = 0;
-        this.moveFrequency = 16; // Set to a constant value
+        this.moveFrequency = 16;
         this.directionChangeTimer = 0;
         this.directionChangeInterval = Math.random() * 5000 + 5000;
         this.rotation = 0;
@@ -242,7 +242,6 @@ function generateInitialState() {
     }
 }
 
-// Call this function when the page loads
 generateInitialState();
 
 function init() {
@@ -353,6 +352,7 @@ function gameOver() {
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over-screen').style.display = 'flex';
     homeButton.style.display = 'block';
+    restartButton.style.display = 'block';
 }
 
 function gameWin() {
@@ -427,14 +427,13 @@ homeButton.addEventListener('click', () => {
     gameRunning = false;
     document.getElementById('start-screen').style.display = 'flex';
     document.getElementById('game-over-screen').style.display = 'none';
-    // document.getElementById('gameCanvas').style.display = 'none';
     cancelAnimationFrame(animationFrameId);
+    homeButton.style.display = 'none';
+    restartButton.style.display = 'none';
 });
 
-// Hide game over screen and buttons initially
 document.getElementById('game-over-screen').style.display = 'none';
 restartButton.style.display = 'none';
 homeButton.style.display = 'none';
 
-// Show start screen
 document.getElementById('start-screen').style.display = 'flex';
