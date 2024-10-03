@@ -343,6 +343,7 @@ function startGame() {
     init();
     gameRunning = true;
     gameLoop();
+    homeButton.style.display = 'block';
 }
 
 function gameOver() {
@@ -350,6 +351,7 @@ function gameOver() {
     playSound('gameover.mp3');
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over-screen').style.display = 'flex';
+    homeButton.style.display = 'block';
 }
 
 function gameWin() {
@@ -419,8 +421,17 @@ restartButton.addEventListener('click', () => {
     }
 });
 
+const homeButton = document.getElementById('home-button');
+homeButton.addEventListener('click', () => {
+    gameRunning = false;
+    document.getElementById('start-screen').style.display = 'flex';
+    document.getElementById('game-over-screen').style.display = 'none';
+    cancelAnimationFrame(animationFrameId);
+});
+
 document.getElementById('game-over-screen').style.display = 'none';
 restartButton.style.display = 'none';
+homeButton.style.display = 'none';
 
 document.getElementById('start-button').addEventListener('click', () => {
     restartButton.style.display = 'block';
