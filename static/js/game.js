@@ -351,8 +351,8 @@ function gameOver() {
     playSound('gameover.mp3');
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over-screen').style.display = 'flex';
-    homeButton.style.display = 'block';
-    restartButton.style.display = 'block';
+    homeButton.style.display = 'none';
+    restartButton.style.display = 'none';
 }
 
 function gameWin() {
@@ -412,6 +412,8 @@ document.getElementById('start-button').addEventListener('click', () => {
 
 document.getElementById('play-again-button').addEventListener('click', () => {
     document.getElementById('game-over-screen').style.display = 'none';
+    homeButton.style.display = 'block';
+    restartButton.style.display = 'block';
     startGame();
 });
 
